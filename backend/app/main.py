@@ -26,7 +26,11 @@ app = FastAPI(title="Morse Code Translator API", version="1.0.0")
 
 # Only needed if the frontend is served from a different origin than the API.
 # The Vite dev server proxies /api, so by default nothing is allowed.
-_origins = [o.strip() for o in os.getenv("CORS_ORIGINS", "").split(",") if o.strip()]
+
+#_origins = [o.strip() for o in os.getenv("CORS_ORIGINS", "").split(",") if o.strip()]
+# Browsers send an Origin header like "https://site.example" (no trailing slash),
+# so strip any trailing slash from the configured values.
+_origins = [o.strip().rstrip("/") for o in os.getenv("CORS_ORIGINS", "").split(",") if o.strip()]
 if _origins:
     app.add_middleware(
         CORSMiddleware,
